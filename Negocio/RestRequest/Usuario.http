@@ -1,0 +1,48 @@
+@host = http://localhost:8001/api
+
+###
+# @name login
+# Login para obtener token
+PATCH {{host}}/auth
+Content-Type: application/json
+
+{
+    "cedula": "118220855",
+    "passw": "118220855"
+}
+
+@token = {{login.response.body.token}}
+
+###
+# Resetear contraseña
+PATCH {{host}}/usuario/passw/reset/118220855
+Authorization: Bearer {{token}}
+
+
+###
+# Cambiar Contraseña
+PATCH {{host}}/usuario/passw/118220855
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "passw"  : "118220855",
+    "passwN" : "luis"
+}
+
+###
+
+# Cambiar el rol
+PATCH {{host}}/usuario/rol/118220855
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "rol"  : 2
+}
+###
+
+GET {{host}}/usuario/118220855
+Authorization: Bearer {{token}}
+
+###

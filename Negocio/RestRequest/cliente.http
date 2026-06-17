@@ -1,0 +1,40 @@
+@host = http://localhost:8001/api
+@uri ={{host}}/cliente
+
+@token =eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsb2NhbGhvc3QiLCJpYXQiOjE3Nzg4NjcyMDAsImV4cCI6MTc3ODg2NzI0NSwic3ViIjoiMTE4MjIwODU1Iiwicm9sIjo0LCJub20iOiJNYXJjb3MgTWFybnppIn0.MYqXVHGuIcjsgn2jcX5e6-PFxxceuAPMOZuxm52WiBM
+
+GET {{uri}}
+Authorization: Bearer {{token}}
+
+###
+
+POST {{uri}}
+Content-Type: application/json
+
+{
+    "cedula": "118220855",
+    "nombre": "Marcos Marnzi",
+    "telefono": "888800050",
+    "email": "marcos.Mardfdfmzio@example.com"
+}
+###
+PUT {{uri}}/2
+Content-Type: application/json
+
+{
+    "cedula": "00112233555",
+    "nombre": "Marcos MarioCD",
+    "telefono": "88880000",
+    "email": "marcos.MarioCD@example.com"
+}
+###
+
+
+DELETE {{uri}}/16
+
+
+###
+
+GET {{uri}}/filter/0/5?cedula=1&nombre=juan
+
+###

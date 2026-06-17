@@ -1,0 +1,54 @@
+networks:
+  dto-red:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.160.0.0/24"
+services:
+  db:
+    container_name: base_datos
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_DATABASE: taller_automotriz
+    ports:
+      - 3307:3306
+    volumes:
+      - ./db_dump:/docker-entrypoint-initdb.d
+      - ./mysql:/var/lib/mysql
+    secrets:
+      - db_password
+    networks:
+      dto-red:
+        ipv4_address: "192.160.0.10"
+  webdatos:
+    container_name: web_datos
+    volumes:
+      - ./Datos/public:/var/www/html/public
+      - ./Datos/src:/var/www/html/src
+    build: 
+     context: .
+     dockerfile: ./Datos/Dockerfile
+    ports:
+      - 8000:80
+    networks:
+      dto-red:
+        ipv4_address: "192.160.0.11"
+  webnegocio:
+    container_name: web_negocio
+    volumes:
+      - ./Negocio/public:/var/www/html/public
+      - ./Negocio/src:/var/www/html/src
+    build:
+     context: .
+     dockerfile: ./Negocio/Dockerfile
+    ports:
+      - 8001:80
+    networks:
+      dto-red:
+        ipv4_address: "192.160.0.12"
+secrets:
+  db_password:
+    file: ./db_password.txt
+
+  

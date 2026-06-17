@@ -1,0 +1,56 @@
+@host = http://localhost:8001/api
+@uri ={{host}}/auth
+
+
+PATCH {{uri}}
+Content-Type: application/json
+
+{
+    "cedula": "118220855",
+    "passw": "luis"
+}
+
+###
+
+DELETE {{uri}}/118220855
+
+###
+
+
+GET {{uri}}
+
+###
+
+
+POST {{uri}}
+Content-Type: application/json
+
+{
+    "cedula": "677776578",
+    "nombre": "Josefin Perez",
+    "telefono": "85867165",
+    "email": "josefin.perez@example.com"
+}
+
+###
+
+PUT {{uri}}/454
+Content-Type: application/json
+
+{
+    "cedula": "833338",
+    "nombre": "Wendolyn Vargas Gonzalez",
+    "telefono": "85653",
+    "email": "wen@example.com"
+}
+
+###
+
+DELETE {{uri}}/11
+
+
+###
+
+GET {{uri}}/filter/0/5?cedula=2&nombre=juan
+
+###
