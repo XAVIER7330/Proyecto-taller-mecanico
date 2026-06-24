@@ -46,14 +46,21 @@ trait Token {
 
     }
 
-    private function verificarToken(string $idUsuario, string $tkRef) {
-        $sql = "SELECT rol FROM usuarios WHERE cedula = :cedula AND tkRef = :tkRef";
-        $con = $this->container->get('conexion');
-        $query = $con->prepare($sql);
-        $query->execute(['cedula' => $idUsuario, 'tkRef' => $tkRef]);
-        $datos = $query->fetchColumn();
-        $query = null;
-        $con = null;
-        return $datos;
-    }        
+    //private function verificarToken(string $idUsuario, string $tkRef) {
+    //    $sql = "SELECT rol FROM usuarios WHERE cedula = :cedula AND tkRef = :tkRef";
+    //    $con = $this->container->get('conexion');
+    //    $query = $con->prepare($sql);
+    //    $query->execute(['cedula' => $idUsuario, 'tkRef' => $tkRef]);
+    //    $datos = $query->fetchColumn();
+    //    $query = null;
+    //    $con = null;
+    //    return $datos;
+    //}        
+
+    private function verificarToken(string $cedula, string $tkRef) {
+        
+        $url = "/token/verificar/$cedula";
+        return $this->ejecutar($url, 'PATCH', json_encode(['tkRef' => $tkRef]));
+
+    }
 }

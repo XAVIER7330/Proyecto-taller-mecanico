@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,6 +12,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Cliente } from './components/cliente/cliente';
+import { Login } from './components/login/login';
+import { AuthService } from './shared/services/auth.service';
 
 type MenuItem = {
     label: string;
@@ -28,12 +30,13 @@ type MenuItem = {
     MatSidenavContainer,  MatSidenavModule,
     MatCheckboxModule, MatFormFieldModule,
     MatIconModule, MatDividerModule, MatListModule,
-    MatTableModule, MatTooltipModule],
+    MatTableModule, MatTooltipModule, Login],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App {
   protected readonly title = signal('frontend');
+  protected readonly authService = inject(AuthService);
   menuItems = signal<MenuItem[]>([
     { label: 'Inicio', icon: 'home', route: 'home', rol : [1,2,3,4] },
     { label: 'Clientes', icon: 'people', route: 'cliente', rol : [1] },
@@ -41,4 +44,13 @@ export class App {
     { label: 'Vehículos', icon: 'directions_car', route: 'vehiculo', rol : [1,2] },
     { label: 'Servicios', icon: 'build', route: 'servicio', rol : [1,2,3] }
   ]) ;
+
+  @HostListener('window:beforeunload')
+  unloadHandler() {
+    this.logout();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }

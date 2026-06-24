@@ -39,4 +39,21 @@ namespace App\controllers;
 
         return $response->withStatus($resp ? 200 : 401);
     }
+
+    public function refresh(request $request, response $response, $args){
+        $body = json_decode($request->getBody());
+        $datos = $this->verificarToken($args["id"], $body->tkRef);
+        $body = json_decode($datos["body"]);
+        $status = json_decode($datos["status"]);
+
+        if($status == 200){
+            $tokens = $this->generarToken($args["id"], $body->rol);
+            $this->modificarToken(cedula: $args["id"], tkRef: $tokens["tkRef"]);
+
+            $response->getBody()->write(json_encode($tokens));
+            }
+        return $response
+            ->withHeader('content-type', 'application/json')
+            ->withStatus($status);
+ }
  }

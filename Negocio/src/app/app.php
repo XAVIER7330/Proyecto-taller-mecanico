@@ -25,7 +25,7 @@ $app = AppFactory::create();
 
 $rules = [
     new RequestMethodRule(ignore: ['OPTIONS']),
-    new RequestPathRule(paths: ["/api"], ignore: ["/api/","/api/auth"])
+    new RequestPathRule(paths: ["/api"], ignore: ["/api/auth"])
 ];
 
 $decoder = new FirebaseDecoder(new Secret($_ENV['KEY'], 'HS256'));

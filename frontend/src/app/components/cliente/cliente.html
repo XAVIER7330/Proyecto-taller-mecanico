@@ -4,6 +4,26 @@
             <mat-card-title class=" font-extrabold! text-[1.5rem]!">Catálogo de Clientes</mat-card-title>
         </mat-card-header>
         <mat-card-content class="relative overflow-x-auto shadow-sm sm:rounded-lg">
+           <mat-expansion-panel hideToggle (opened)="panelFilterState.set(true)" (closed)="onFilterClose();" 
+           class="mb-2! mt-2!">
+             <mat-expansion-panel-header>
+               <mat-panel-title> Filtrar - click para {{panelFilterState() ? 'cerrar' : 'abrir'}} </mat-panel-title>
+               
+               </mat-expansion-panel-header>
+           <div>
+            <mat-form-field>
+              <mat-label>Cédula</mat-label>
+              <input id="cedula" matInput [formField]="frmFilter.cedula" (input)="onCedulaChange($event);">
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>nombre</mat-label>
+              <input id="nombre" matInput [formField]="frmFilter.nombre" (input)="onNombreChange($event);">
+            </mat-form-field>
+           </div>
+
+           </mat-expansion-panel>
+
     <table mat-table [dataSource]="dataSource()" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
   <!-- Columna Cédula -->

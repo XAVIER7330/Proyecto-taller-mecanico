@@ -6,8 +6,8 @@ PATCH {{uri}}
 Content-Type: application/json
 
 {
-    "cedula": "118220855",
-    "passw": "118220855"
+    "cedula": "118220856",
+    "passw": "118220856"
 }
 ###
 

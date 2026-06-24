@@ -7,13 +7,15 @@ import autoTable from 'jspdf-autotable';
   providedIn: 'root'
 })
 export class PrintService {
-  print(columna: string[], fila:string[], encabezado: string, guardar: boolean) {
+  print(columna: string[], cuerpo: Array<any>, encabezado: string, guardar ? : boolean) {
 
-    const doc = new jsPDF('portrait', 'px', 'letter');
+    const doc = new jsPDF({orientation: 'portrait', //laandscape
+       unit: 'px',
+        format: 'letter'});
     doc.text(encabezado, (doc.internal.pageSize.width / 2), 25, { align: 'center' });
     autoTable(doc, {
       head: [columna],
-      body: [fila]
+      body: cuerpo
     });
     if(guardar) {
       const today = new Date();

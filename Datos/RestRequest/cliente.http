@@ -9,10 +9,10 @@ POST {{uri}}
 Content-Type: application/json
 
 {
-    "cedula": "118220855",
-    "nombre": "Marcos MarioAB",
+    "cedula": "118220856",
+    "nombre": "Marcos MarioABC",
     "telefono": "88880000",
-    "email": "marcos.Mariocar@example.com"
+    "email": "marcos.Mariccocar@example.com"
 }
 ###
 PUT {{uri}}/5

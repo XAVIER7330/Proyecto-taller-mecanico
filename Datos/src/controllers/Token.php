@@ -34,4 +34,23 @@ namespace App\controllers;
                 $response->getBody()->write(json_encode(['message' => 'Error al actualizar el token']));
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(500);   
 
-        }  } }
+        }  } 
+        
+        public function verificarToken( Request $request, Response $response, array $args ){
+            $cedula = $args['id'];
+            $tkRef = json_decode($request->getBody())->tkRef;
+            $sql = "SELECT rol FROM Usuarios WHERE cedula = :cedula AND tkRef = :tkRef";
+            $con = $this->conteiner->get('conexion');
+            $query = $con->prepare($sql);
+            $query->bindValue(':cedula', $cedula, PDO::PARAM_STR);
+            $query->bindValue(':tkRef', $tkRef, PDO::PARAM_STR);
+            $query->execute();
+            $datos = $query->fetch(PDO::FETCH_ASSOC);
+            $status = $query->rowCount()>0 ? 200 : 401;
+            $query = null;
+            $con = null;
+
+            $response->getBody()->write(json_encode($datos));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
+        }
+    }
