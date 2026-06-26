@@ -10,55 +10,71 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FrmCliente } from '../frm-cliente/frm-cliente';
+import { Usuario } from '../../../shared/services/usuario.service';
 
 
+interface PasswForm {
+    passw: string;
+    passwN: string;
+    passwR: string;
+}
 
 @Component({
-  selector: 'app-frm-login',
+  selector: 'app-frm-passw',
   imports: [MatCardModule, MatIconModule, MatButtonModule, MatFormFieldModule, MatFormField, FormRoot, MatInput, MatInputModule, FormField],
-  templateUrl: './frm-login.html',
-  styleUrl: './frm-login.css',
+  templateUrl: './frm-passw.html',
+  styleUrl: './frm-passw.css',
 })
-export class FrmLogin {
-  private readonly srvAuth = inject(AuthService);
+export class FrmPassw {
+
   private readonly router = inject(Router);
-  dialogRef = inject(MatDialogRef<FrmLogin>);
+  private readonly srvAuth = inject(AuthService);
+  private readonly srvUsuario = inject(Usuario)
+  dialogRef = inject(MatDialogRef<FrmPassw>);
   mostrarError = signal(false);
 
-  objLogin = signal<LoginForm>({ cedula: '', passw: '' });
+  objPassw = signal<PasswForm>({  passw: '' ,passwN: '',passwR: ''});
 
-  frmLogin = form(this.objLogin, (s)=> {
-    required(s.cedula, {message: 'La cédula es requerida'});
-    required(s.passw, {message: 'La contraseña es requerida'});
+
+ frmPassw = form(this.objPassw, (s)=> {
+    required(s.passw, {message: 'La vieja contraseña es requerida'});
+    required(s.passwN, {message: 'La nueva contraseña es requerida'});
+    required(s.passwR, {message: 'La repetición de la contraseña es requerida'});
   },
 {
   submission: {
     action: async f => {
       //console.log(f().value());
-      this.login(f().value());
+      this.changePassword(f().value());
     }
   }
 }
 );
-login(datos: LoginForm) {
-    this.srvAuth.login(datos).subscribe({
+
+
+changePassword(datos: PasswForm) {
+    this.srvUsuario.changePassword(this.srvAuth.userActualS().cedula, {passw: datos.passw, passwN: datos.passwN, passwR: datos.passwR}).subscribe({
       next: (res) => {
-        this.mostrarError.set(res === 401);
-        console.log('Login correcto:', res);
-        if (res && res != 401) {
+        
+        console.log('Cambio de contraseña correcto:');
+        
+        alert('Cambio de contraseña correcto');
          this.dialogRef.close();
          this.router.navigate(['/home']);
-        }
+       
+        
         
        
       },
       error: (err) => {
-        console.error('Login fallido:', err);
+        this.mostrarError.set(true);
+        console.error('Cambio Fallido:', err);
         // Handle login error, e.g., show error message to user
       },
       complete: () => {
-        console.log('Logeado');
+        console.log('Cambio de contraseña completado');
       } 
   });
 }
+
 }

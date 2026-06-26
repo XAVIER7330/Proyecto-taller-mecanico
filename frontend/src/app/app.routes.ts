@@ -5,10 +5,12 @@ import { Mecanico } from './components/mecanico/mecanico';
 import { Login } from './components/login/login';
 import { authGuard } from './shared/helpers/guards/auth-guard';
 import { Roles } from './shared/interfaces/roles';
+import { loginGuard } from './shared/helpers/guards/login-guard';
 
 export const routes: Routes = [
     {path: "", redirectTo: "/home", pathMatch: "full"},
     {path: "login", loadComponent : () => import('./components/login/login').then(m => m.Login)},
+    {path: "changePassw", canActivate: [authGuard],data: { roles: [Roles.Cliente, Roles.Oficinista, Roles.Mecanico, Roles.Admin] }, loadComponent : () => import('./components/change-passw/change-passw').then(m => m.ChangePassw)},
     {path: "home", canActivate: [authGuard], data: { roles: [Roles.Cliente, Roles.Oficinista, Roles.Mecanico, Roles.Admin] }, loadComponent : () => import('./components/home/home').then(m => m.Home)},
     {path: "cliente", canActivate: [authGuard], data: { roles: [Roles.Cliente, Roles.Oficinista, Roles.Admin] }, loadComponent : () => import('./components/cliente/cliente').then(m => m.Cliente)},
     {path: "mecanico", canActivate: [authGuard], data: { roles: [Roles.Mecanico, Roles.Admin] }, loadComponent : () => import('./components/mecanico/mecanico').then(m => m.Mecanico)},

@@ -30,7 +30,7 @@ type MenuItem = {
     MatSidenavContainer,  MatSidenavModule,
     MatCheckboxModule, MatFormFieldModule,
     MatIconModule, MatDividerModule, MatListModule,
-    MatTableModule, MatTooltipModule, Login],
+    MatTableModule, MatTooltipModule],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
@@ -39,7 +39,7 @@ export class App {
   protected readonly authService = inject(AuthService);
   menuItems = signal<MenuItem[]>([
     { label: 'Inicio', icon: 'home', route: 'home', rol : [1,2,3,4] },
-    { label: 'Clientes', icon: 'people', route: 'cliente', rol : [1] },
+    { label: 'Clientes', icon: 'people', route: 'cliente', rol : [1,2,4] }, //eliminar el 4 es solo para pruebaas
     { label: 'Mecanicos', icon: 'engineering', route: 'mecanico', rol : [1,2] },
     { label: 'Vehículos', icon: 'directions_car', route: 'vehiculo', rol : [1,2] },
     { label: 'Servicios', icon: 'build', route: 'servicio', rol : [1,2,3] }

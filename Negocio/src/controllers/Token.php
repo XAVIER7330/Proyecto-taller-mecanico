@@ -7,7 +7,7 @@ trait Token {
         $payload = [
             'iss' => $_SERVER['SERVER_NAME'],
             'iat' => time(),
-            'exp' => time() + 45, // 30 minutos
+            'exp' => time() + 90, // 30 minutos
             'sub' => $idUsuario,
             'rol' => $rol,
             'nom' => $nombre

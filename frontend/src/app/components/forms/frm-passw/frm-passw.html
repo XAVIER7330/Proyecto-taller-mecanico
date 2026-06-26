@@ -1,0 +1,59 @@
+<form [formRoot]= "frmPassw">
+<mat-card>
+    <mat-card-header class="h-15 flex items-center justify-center mb-4 bg-blue-800 text-white!">
+        <mat-card-title>Restablecer Contraseña</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="flex flex-col">
+            <mat-form-field appearance="fill" class="mt-4 mx-5">
+                <mat-label>Contraseña actual</mat-label>
+                <input Type="password" matInput [formField]="frmPassw.passw" (focus)="mostrarError.set(false)">
+            </mat-form-field>
+            @if(frmPassw.passw().touched() && frmPassw.passw().invalid())
+            {
+                @for(error of frmPassw.passw().errors(); track error.kind)
+                {
+                    <mat-error>{{error.message}}</mat-error>
+                }
+
+            }
+            <mat-form-field appearance="fill" class="mt-4 mx-5">
+                <mat-label>Contraseña nueva</mat-label>
+                <input Type="password" matInput [formField]="frmPassw.passwN" (focus)="mostrarError.set(false)">
+            </mat-form-field>  
+              @if(frmPassw.passwN().touched() && frmPassw.passwN().invalid())
+            {
+                @for(error of frmPassw.passwN().errors(); track error.kind)
+                {
+                    <mat-error>{{error.message}}</mat-error>
+                }
+
+            }
+
+            <mat-form-field appearance="fill" class="mt-4 mx-5">
+                <mat-label>Confirmar contraseña</mat-label>
+                <input Type="password" matInput [formField]="frmPassw.passwR" (focus)="mostrarError.set(false)">
+            </mat-form-field>
+             @if(frmPassw.passwR().touched() && frmPassw.passwR().invalid())
+            {
+                @for(error of frmPassw.passwR().errors(); track error.kind)
+                {
+                    <mat-error>{{error.message}}</mat-error>
+                }
+
+            }
+         
+             <mat-error class="text-center" [hidden]="!mostrarError()"> Las contraseñas no coinciden</mat-error>
+        </div>
+
+    </mat-card-content>
+   
+    <mat-card-actions class="mb-5">
+        <button type="submit" matFab extended color="primary" class="flex flex-1 mx-7" [disabled] = "frmPassw().invalid()">
+            <mat-icon>login</mat-icon>
+            Cambiar Contraseña
+        </button>
+
+    </mat-card-actions>
+</mat-card>
+</form>

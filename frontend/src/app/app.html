@@ -15,7 +15,7 @@
             <button mat-menu-item [routerLink]="['/login']" [hidden]="this.authService.isLoggedIn()">Iniciar sesión</button>
             <button mat-menu-item (click)="logout()">Cerrar sesión</button>
             <mat-divider></mat-divider>
-            <button mat-menu-item>Cambiar contraseña</button>
+            <button mat-menu-item [routerLink]="['/changePassw']">Cambiar contraseña</button>
         </mat-menu>
 
     </mat-toolbar>
@@ -25,7 +25,7 @@
             <mat-nav-list>
                 @for(
 item of menuItems(); track item.label){
-              <mat-list-item>
+              <mat-list-item [hidden]="!item.rol.includes(this.authService.userActualS().rol)">
                  <a href="" [routerLink]="[item.route]">
                      <mat-icon>{{item.icon}}</mat-icon> 
                      {{item.label}}

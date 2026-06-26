@@ -91,10 +91,9 @@ public function update( Request $request, Response $response, array $args ){
        
     $datos = http_build_query($request->getQueryParams());
     $uri = self::ENDPOINT . "/filter/" . $args['pag'] . "/" . $args['lim'];
-    if (!empty($datos)) {
+    
         $uri .= "?" . $datos;
-    }
-
+    
     $resp = $this->ejecutar( $uri, 'GET');
 
         $status = $resp['status'];
