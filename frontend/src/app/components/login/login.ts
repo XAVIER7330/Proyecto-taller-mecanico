@@ -13,8 +13,8 @@ export class Login implements OnInit {
 
   mostrarDialogo() {
     const dialogRef = this.dialogo.open(FrmLogin, {
-      width: '35vw',
-      maxWidth: '45rem',
+      width: '100%',
+      maxWidth: '400px',
       disableClose: true,
       
     });

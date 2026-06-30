@@ -15,6 +15,18 @@ Content-Type: application/json
     "email": "marcos.Mariccocar@example.com"
 }
 ###
+###
+
+POST {{uri}}
+Content-Type: application/json
+
+{
+    "cedula": "702460246",
+    "nombre": "Xavier Marín",
+    "telefono": "88880000",
+    "email": "xavier@example.com"
+}
+###
 PUT {{uri}}/5
 Content-Type: application/json
 

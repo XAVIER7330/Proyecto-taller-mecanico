@@ -12,7 +12,7 @@ services:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
       MYSQL_DATABASE: taller_automotriz
     ports:
-      - 3307:3306
+      - 3306:3306
     volumes:
       - ./db_dump:/docker-entrypoint-initdb.d
       - ./mysql:/var/lib/mysql
