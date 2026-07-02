@@ -9,6 +9,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ClienteService } from '../../../shared/services/cliente.service';
 import { CdkAriaLive } from "../../../../../node_modules/@angular/cdk/types/_a11y-module-chunk";
 import { DialogoGeneral } from '../dialogo-general/dialogo-general';
+import { AuthService } from '../../../shared/services/auth.service';  
+import { User } from '../../../shared/models/User';
 
 @Component({
   selector: 'app-frm-cliente',
@@ -25,6 +27,7 @@ export class FrmCliente implements OnInit{
 
   private builder = inject(FormBuilder);
   private srvCliente = inject(ClienteService);
+  private readonly srvAut = inject(AuthService);
     
   
   miForm : FormGroup;
@@ -63,6 +66,13 @@ export class FrmCliente implements OnInit{
     }else{
       this.srvCliente.guardar(this.miForm.value, this.miForm.value.id_cliente).subscribe({
         complete: () => {
+          this.srvAut.userActualS.set(
+            new User({
+              cedula: this.srvAut.userActual.cedula,
+              nombre: this.miForm.controls['nombre'].value,
+              rol: this.srvAut.userActual.rol
+            })
+          );
           this.dialog.open(DialogoGeneral, {
                 data : {
                   texto : 'Registro modificado de forma correcta',

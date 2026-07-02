@@ -1,7 +1,7 @@
 <section class="flex">
-    <mat-toolbar class="header" [hidden]="!this.authService.isLoggedIn()">
+    <mat-toolbar class="header" >
         <button matIconButton class="botonMenu" (click)="sidenav.toggle();"
-        [matTooltip]="sidenav.opened ? 'Cerrar menú' : 'Abrir menú'">
+        [matTooltip]="sidenav.opened ? 'Cerrar menú' : 'Abrir menú'" [disabled]="!this.authService.isLoggedIn()">
             <mat-icon>menu</mat-icon>
 
         </button>
@@ -13,9 +13,9 @@
         </div>
         <mat-menu #menu="matMenu">
             <button mat-menu-item [routerLink]="['/login']" [hidden]="this.authService.isLoggedIn()">Iniciar sesión</button>
-            <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+            <button mat-menu-item (click)="logout()" [hidden]="!this.authService.isLoggedIn()">Cerrar sesión</button>
             <mat-divider></mat-divider>
-            <button mat-menu-item [routerLink]="['/changePassw']">Cambiar contraseña</button>
+            <button mat-menu-item [routerLink]="['/changePassw']" [hidden]="!this.authService.isLoggedIn()">Cambiar contraseña</button>
         </mat-menu>
 
     </mat-toolbar>
@@ -23,9 +23,10 @@
     <mat-sidenav-container class="container">
         <mat-sidenav #sidenav mode="side" [opened]="this.authService.isLoggedIn()" class="sidenav">
             <mat-nav-list>
-                @for(
-item of menuItems(); track item.label){
-              <mat-list-item [hidden]="!item.rol.includes(this.authService.userActualS().rol)">
+                <mat-list-item class="bg-blue-950! rounded-b-sm!">{{authService.userActualS().nombre}}</mat-list-item>
+                <hr>
+                @for(item of menuItems(); track item.label){
+                <mat-list-item [hidden]="!item.rol.includes(this.authService.userActualS().rol)">
                  <a href="" [routerLink]="[item.route]">
                      <mat-icon>{{item.icon}}</mat-icon> 
                      {{item.label}}

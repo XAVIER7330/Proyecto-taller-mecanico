@@ -203,14 +203,13 @@ public function update( Request $request, Response $response, array $args ){
         
             return $response ->withStatus($status);  
     }
-
-
 public function filter(Request $request, Response $response, array $args) {
         
         $datos = $request->getQueryParams();
        
         $sql = "SELECT *, COUNT(*) OVER() as total FROM clientes 
-            WHERE cedula LIKE :cedula AND nombre LIKE :nombre;";
+            WHERE cedula LIKE :cedula AND nombre LIKE :nombre ";
+        $sql .= "LIMIT :offset, :limit;";
 
         $con = $this->conteiner->get('conexion');
         try {
@@ -220,22 +219,37 @@ public function filter(Request $request, Response $response, array $args) {
                 $value = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
                 $query->bindValue($key, "%$value%", PDO::PARAM_STR);
             }
+            $pag = $args['pag'] > 0 ? ($args['pag'] * $args['lim']) : 0;
+
+            $query->bindValue('offset', (int)$pag, PDO::PARAM_INT);
+            $query->bindValue('limit', (int)$args['lim'], PDO::PARAM_INT);
             $query->execute();
             $data = $query->fetchAll(PDO::FETCH_OBJ);
-            $total = $data[0]->total ?? 0; // Obtener el total de registros coincidentes desde
-            $data = array_map(function($item){
-                unset($item->total); // Eliminar la propiedad 'total' de cada objeto
-                return $item;
-             }, $data);
-           
-            $res['data'] = $data; // Agregar los datos filtrados al resultado
-            $res['totalRegistros'] = $total; // Agregar el total de registros al resultado
+            //var_dump($data);die();
 
-            $status = $query->rowCount() > 0 ? 200 : 204;
+            $total = $data[0]->total ?? 0;
+
+            $data = array_map(function($item) {
+                unset($item->total);
+                return $item;
+            }, $data);
+       
+        /*
+            foreach ($data as $key => $value) {
+                unset($data[$key]->total);
+            }
+
+        */
+
+            $res['data'] = $data;
+            $res['totalRegistros'] = $total;
+
+            $status = $total > 0 ? 200 : 204;
+
         } catch(\PDOException $e) {
             $status =  500;
-            //$res = ["msg" => $e->getMessage(), "codigo" => $e->getCode()];
-            $res = ["msg" => "Se detecto error en tiempo de ejecución"];
+                $res = ["msg" => $e->getMessage(), "codigo" => $e->getCode()];
+            //$res = ["msg" => "Se detecto error en tiempo de ejecución"];
         }
         $query = null;
         $con = null;
@@ -246,7 +260,5 @@ public function filter(Request $request, Response $response, array $args) {
             ->withStatus($status);
     }
 
-
-
- }
+}
 
