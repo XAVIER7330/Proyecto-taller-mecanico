@@ -1,1 +1,131 @@
-<p>orden works!</p>
+<mat-card class="bg-black">
+  <div class="p-6 bg-white, border-gray-200 rounded-lg shadow-sm">
+    <mat-card-header class="bg-gray-200 h-13 justify-center">
+      <mat-card-title class="font-extrabold! text-[1.5rem]!">Órdenes de Reparación</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="relative overflow-x-auto shadow-sm sm:rounded-lg">
+
+      <mat-expansion-panel hideToggle (opened)="panelFilterState.set(true)"
+        (closed)="panelFilterState.set(false); onFilterClose();" class="mb-2! mt-2!">
+        <mat-expansion-panel-header>
+          <mat-panel-title> Filtrar - Click para {{panelFilterState() ? 'cerrar' : 'abrir'}} </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-panel-description>
+            <mat-form-field  class="example-full-width">
+              <mat-label>Placa</mat-label>
+              <input matInput [formField]="frmFilter.placa" (input)="onPlacaChange($event);">
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Estado</mat-label>
+              <mat-select [formField]="frmFilter.estado" (selectionChange)="onEstadoChange($event.value);">
+                <mat-option value="">Todos</mat-option>
+                @for(e of estados; track e.valor){
+                  <mat-option [value]="e.valor">{{e.etiqueta}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+        </mat-panel-description>
+      </mat-expansion-panel>
+
+      <table mat-table [dataSource]="dataSource()"
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
+        <!-- Columna Orden -->
+        <ng-container matColumnDef="id_orden">
+          <th mat-header-cell *matHeaderCellDef> Orden </th>
+          <td mat-cell *matCellDef="let element"> {{element.id_orden}} </td>
+        </ng-container>
+
+        <!-- Columna Fecha -->
+        <ng-container matColumnDef="fecha_entrada">
+          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <td mat-cell *matCellDef="let element"> {{element.fecha_entrada}} </td>
+        </ng-container>
+
+        <!-- Columna Placa -->
+        <ng-container matColumnDef="placa">
+          <th mat-header-cell *matHeaderCellDef> Placa </th>
+          <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+        </ng-container>
+
+        <!-- Columna Cliente -->
+        <ng-container matColumnDef="nombre_cliente">
+          <th mat-header-cell *matHeaderCellDef> Cliente </th>
+          <td mat-cell *matCellDef="let element"> {{element.nombre_cliente}} </td>
+        </ng-container>
+
+        <!-- Columna Mecánico -->
+        <ng-container matColumnDef="nombre_mecanico">
+          <th mat-header-cell *matHeaderCellDef> Mecánico </th>
+          <td mat-cell *matCellDef="let element"> {{element.nombre_mecanico ?? 'Sin asignar'}} </td>
+        </ng-container>
+
+        <!-- Columna Estado -->
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td mat-cell *matCellDef="let element"> {{estadoLabel(element.estado)}} </td>
+        </ng-container>
+
+        <!-- Columna Diagnóstico -->
+        <ng-container matColumnDef="descripcion">
+          <th mat-header-cell *matHeaderCellDef> Diagnóstico </th>
+          <td mat-cell *matCellDef="let element"> {{element.descripcion ?? 'Sin diagnosticar'}} </td>
+        </ng-container>
+
+        <!-- Columna Costo Total -->
+        <ng-container matColumnDef="costo_total">
+          <th mat-header-cell *matHeaderCellDef> Costo Total </th>
+          <td mat-cell *matCellDef="let element"> {{element.costo_total}} </td>
+        </ng-container>
+
+        <!-- Columna Botonera -->
+        <ng-container matColumnDef="botonera">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+
+            <button mat-icon-button (click)="onCreate();"
+
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-0.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 cursor-pointer">
+              <mat-icon class="font-bold!">add</mat-icon>
+            </button>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex gap-1 justify-center">
+              <button mat-icon-button color="primary" (click)="onInfo(element.id_orden);"
+                class="flex content-center items-center focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"><mat-icon>info</mat-icon></button>
+              <button mat-icon-button color="primary" (click)="onEdit(element.id_orden);"
+                class="flex content-center items-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-2 py-1  dark:focus:ring-yellow-900 cursor-pointer">
+                <mat-icon>edit</mat-icon></button>
+              <button mat-icon-button (click)="onDiagnosticar(element);"
+                class="flex content-center items-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 cursor-pointer"><mat-icon>fact_check</mat-icon></button>
+              <button mat-icon-button (click)="onCambiarEstado(element);"
+                matTooltip="Cambiar estado"
+                class="flex content-center items-center focus:outline-none text-white! bg-green-700! hover:bg-green-800! focus:ring-4 focus:ring-green-300 font-medium rounded-lg! text-sm px-2 py-1 dark:bg-green-600! dark:hover:bg-green-700! dark:focus:ring-green-800 cursor-pointer"><mat-icon>arrow_forward</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="onDelete(element.id_orden);"
+                class="flex content-center items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer "><mat-icon>delete</mat-icon></button>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="mostrarEncabezados"></tr>
+        <tr mat-row *matRowDef="let row; columns: mostrarEncabezados;"></tr>
+
+      </table>
+    </mat-card-content>
+  </div>
+  <mat-card-footer class="flex justify-between p-3">
+    <mat-paginator
+        (page)="onPageChange($event)"
+        [length]="totalRecords()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[5, 10, 100]"
+        aria-label="Select page">
+    </mat-paginator>
+    <div class="">
+      <button matFab extended (click)="onPrint();">
+        Imprimir <mat-icon>printer</mat-icon>
+      </button>
+    </div>
+
+  </mat-card-footer>
+</mat-card>

@@ -23,7 +23,12 @@
     <mat-sidenav-container class="container">
         <mat-sidenav #sidenav mode="side" [opened]="this.authService.isLoggedIn()" class="sidenav">
             <mat-nav-list>
-                <mat-list-item class="bg-blue-950! rounded-b-sm!">{{authService.userActualS().nombre}}</mat-list-item>
+                <mat-list-item class="bg-blue-700! rounded-none! h-auto! py-3!">
+                    <div class="flex flex-col">
+                        <span class="font-semibold text-white">{{authService.userActualS().nombre}}</span>
+                        <span class="text-xs text-blue-100">{{rolLabel()}}</span>
+                    </div>
+                </mat-list-item>
                 <hr>
                 @for(item of menuItems(); track item.label){
                 <mat-list-item [hidden]="!item.rol.includes(this.authService.userActualS().rol)">

@@ -68,7 +68,7 @@ public function create( Request $request, Response $response, array $args ){
         // Insertar cuenta de usuario con rol 2
         $sql = "INSERT INTO Usuarios (cedula, passw, rol) VALUES (:cedula, :passw, :rol)";
         $passw = password_hash($body->cedula, PASSWORD_BCRYPT, ['cost' => 10]);
-        $rol = 2; // rol para mecánicos según requerimiento
+        $rol = 3; // rol para mecánicos según Roles enum del frontend (1=Admin, 2=Oficinista, 3=Mecanico, 4=Cliente)
         $query = $con->prepare($sql);
         $query->bindValue(':cedula', $body->cedula, PDO::PARAM_STR);
         $query->bindValue(':passw', $passw, PDO::PARAM_STR);
@@ -200,7 +200,7 @@ public function filter(Request $request, Response $response, array $args){
         $lim = $lim > 0 ? $lim : 5;
         $offset = ($pag - 1) * $lim;
 
-        $sql = "SELECT * FROM Mecanicos WHERE 1=1";
+        $sql = "SELECT *, COUNT(*) OVER() as total FROM Mecanicos WHERE 1=1";
         $params = [];
 
         if (isset($datos['cedula']) && $datos['cedula'] !== '') {
@@ -227,14 +227,23 @@ public function filter(Request $request, Response $response, array $args){
             foreach ($params as $key => $value) {
                 $query->bindValue($key, $value, PDO::PARAM_STR);
             }
-            
+
             $query->bindValue(':offset', $offset, PDO::PARAM_INT);
             $query->bindValue(':lim', $lim, PDO::PARAM_INT);
 
             $query->execute();
-            $res = $query->fetchAll();
+            $data = $query->fetchAll();
 
-            $status = $query->rowCount() > 0 ? 200 : 204;
+            $total = $data[0]->total ?? 0;
+            $data = array_map(function($item) {
+                unset($item->total);
+                return $item;
+            }, $data);
+
+            $res['data'] = $data;
+            $res['totalRegistros'] = $total;
+
+            $status = $total > 0 ? 200 : 204;
 
         }catch(\PDOException $e){
             $status = 500;

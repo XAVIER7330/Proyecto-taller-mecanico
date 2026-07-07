@@ -14,6 +14,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Cliente } from './components/cliente/cliente';
 import { Login } from './components/login/login';
 import { AuthService } from './shared/services/auth.service';
+import { Roles } from './shared/interfaces/roles';
+
+const ROL_LABELS: Record<number, string> = {
+  [Roles.Admin]: 'Administrador',
+  [Roles.Oficinista]: 'Recepcionista',
+  [Roles.Mecanico]: 'Mecánico',
+  [Roles.Cliente]: 'Cliente'
+};
 
 type MenuItem = {
     label: string;
@@ -42,8 +50,14 @@ export class App {
     { label: 'Clientes', icon: 'people', route: 'cliente', rol : [1,2,4] }, //eliminar el 4 es solo para pruebaas
     { label: 'Mecanicos', icon: 'engineering', route: 'mecanico', rol : [1,2] },
     { label: 'Vehículos', icon: 'directions_car', route: 'vehiculo', rol : [1,2] },
-    { label: 'Servicios', icon: 'build', route: 'servicio', rol : [1,2,3] }
+    { label: 'Servicios', icon: 'build', route: 'servicio', rol : [1,2,3] },
+    { label: 'Administradores', icon: 'admin_panel_settings', route: 'admin', rol : [1] },
+    { label: 'Recepcionistas', icon: 'support_agent', route: 'oficinista', rol : [1] }
   ]) ;
+
+  rolLabel(): string {
+    return ROL_LABELS[this.authService.userActualS().rol] ?? '';
+  }
 
   @HostListener('window:beforeunload')
   unloadHandler() {

@@ -1,0 +1,76 @@
+<h2 mat-dialog-title class="py-5! text-center font-bold!"> {{titulo}}</h2>
+<mat-divider class="border-2"></mat-divider>
+<mat-dialog-content>
+  <form id="frmDiagnostico" [formGroup]="miForm" (ngSubmit)="onGuardar()">
+    <div class="flex flex-col">
+
+      @if(!crearManual){
+        <mat-form-field>
+          <mat-label>Vehículo</mat-label>
+          <input matInput [value]="placa" readonly>
+        </mat-form-field>
+      } @else {
+        <mat-form-field>
+          <mat-label>N° de Orden</mat-label>
+          <input matInput type="number" formControlName="id_orden" [readonly]="info">
+        </mat-form-field>
+        @if(miForm.controls['id_orden'].touched && miForm.controls['id_orden'].invalid){
+          @if(miForm.controls['id_orden'].errors!['required']){
+            <mat-error>El número de orden es requerido.</mat-error>
+          }
+          @if(miForm.controls['id_orden'].errors!['min']){
+            <mat-error>El número de orden no es válido.</mat-error>
+          }
+        }
+      }
+
+      <mat-form-field>
+        <mat-label>Descripción del diagnóstico</mat-label>
+        <input matInput formControlName="descripcion" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['descripcion'].touched && miForm.controls['descripcion'].invalid){
+
+      @if(miForm.controls['descripcion'].errors!['required']){
+        <mat-error>La descripción es requerida.</mat-error>
+      }
+      @if(miForm.controls['descripcion'].errors!['minLength']){
+        <mat-error>La descripción debe tener al menos 3 caracteres.</mat-error>
+      }
+      @if(miForm.controls['descripcion'].errors!['maxLength']){
+        <mat-error>La descripción no debe exceder los 255 caracteres.</mat-error>
+      }
+    }
+
+      <mat-form-field>
+        <mat-label>Observaciones</mat-label>
+        <input matInput formControlName="observaciones" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['observaciones'].touched && miForm.controls['observaciones'].invalid){
+
+      @if(miForm.controls['observaciones'].errors!['maxLength']){
+        <mat-error>Las observaciones no deben exceder los 255 caracteres.</mat-error>
+      }
+    }
+
+      <mat-form-field>
+        <mat-label>Presupuesto estimado</mat-label>
+        <input matInput type="number" formControlName="presupuesto_estimado" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['presupuesto_estimado'].touched && miForm.controls['presupuesto_estimado'].invalid){
+
+      @if(miForm.controls['presupuesto_estimado'].errors!['required']){
+        <mat-error>El presupuesto estimado es requerido.</mat-error>
+      }
+      @if(miForm.controls['presupuesto_estimado'].errors!['min']){
+        <mat-error>El presupuesto estimado no puede ser negativo.</mat-error>
+      }
+    }
+
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-divider class="border-2"></mat-divider>
+<mat-dialog-actions class="py-5!">
+  <button matFab extended disabled="false" color="primary" type="submit" form="frmDiagnostico" [disabled]=miForm.invalid [hidden]="info"><mat-icon>save</mat-icon>Guardar</button>
+  <button matFab extended color="warn" [mat-dialog-close]="false"><mat-icon>cancel</mat-icon>Cancelar</button>
+</mat-dialog-actions>

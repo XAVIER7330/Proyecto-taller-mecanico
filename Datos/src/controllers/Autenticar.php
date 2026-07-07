@@ -22,7 +22,7 @@ namespace App\controllers;
         if ($datos && password_verify($pass, $datos->passw)) {
            $recurso = match ($datos->rol) {
                 1 => 'administradores',
-                2 => 'oficinas',
+                2 => 'oficinistas',
                 3 => 'mecanicos',
                 4 => 'clientes',
                 };

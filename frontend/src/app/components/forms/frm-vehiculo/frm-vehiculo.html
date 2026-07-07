@@ -1,0 +1,92 @@
+<h2 mat-dialog-title class="py-5! text-center font-bold!"> {{titulo}}</h2>
+<mat-divider class="border-2"></mat-divider>
+<mat-dialog-content>
+  <form id="frmVehiculo" [formGroup]="miForm" (ngSubmit)="onGuardar()">
+    <div class="flex flex-col">
+
+      <mat-form-field [hidden]="miForm.value.id_vehiculo === 0">
+      <mat-label>Id Vehículo</mat-label>
+      <input matInput formControlName="id_vehiculo" readonly [readonly]="info">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Placa</mat-label>
+        <input matInput formControlName="placa" [readonly]="info" placeholder="ABC-123">
+      </mat-form-field>
+      @if(miForm.controls['placa'].touched && miForm.controls['placa'].invalid){
+
+      @if(miForm.controls['placa'].errors!['required']){
+        <mat-error>La placa es requerida.</mat-error>
+      }
+      @if(miForm.controls['placa'].errors!['pattern']){
+        <mat-error>La placa no es válida.</mat-error>
+      }
+    }
+
+      <mat-form-field>
+        <mat-label>Marca</mat-label>
+        <input matInput formControlName="marca" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['marca'].touched && miForm.controls['marca'].invalid){
+
+      @if(miForm.controls['marca'].errors!['required']){
+        <mat-error>La marca es requerida.</mat-error>
+      }
+      @if(miForm.controls['marca'].errors!['minLength']){
+        <mat-error>La marca debe tener al menos 2 caracteres.</mat-error>
+      }
+      @if(miForm.controls['marca'].errors!['maxLength']){
+        <mat-error>La marca no debe exceder los 50 caracteres.</mat-error>
+      }
+    }
+
+      <mat-form-field>
+        <mat-label>Modelo</mat-label>
+        <input matInput formControlName="modelo" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['modelo'].touched && miForm.controls['modelo'].invalid){
+
+      @if(miForm.controls['modelo'].errors!['required']){
+        <mat-error>El modelo es requerido.</mat-error>
+      }
+      @if(miForm.controls['modelo'].errors!['maxLength']){
+        <mat-error>El modelo no debe exceder los 50 caracteres.</mat-error>
+      }
+    }
+
+      <mat-form-field>
+        <mat-label>Año</mat-label>
+        <input matInput type="number" formControlName="anio" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['anio'].touched && miForm.controls['anio'].invalid){
+
+      @if(miForm.controls['anio'].errors!['required']){
+        <mat-error>El año es requerido.</mat-error>
+      }
+      @if(miForm.controls['anio'].errors!['min'] || miForm.controls['anio'].errors!['max']){
+        <mat-error>El año no es válido.</mat-error>
+      }
+    }
+
+      <mat-form-field>
+        <mat-label>Cédula del cliente</mat-label>
+        <input matInput formControlName="cedula" [readonly]="info">
+      </mat-form-field>
+      @if(miForm.controls['cedula'].touched && miForm.controls['cedula'].invalid){
+
+      @if(miForm.controls['cedula'].errors!['required']){
+        <mat-error>La cédula del cliente es requerida.</mat-error>
+      }
+      @if(miForm.controls['cedula'].errors!['pattern']){
+        <mat-error>La cédula o DIMEX no es válido.</mat-error>
+      }
+    }
+
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-divider class="border-2"></mat-divider>
+<mat-dialog-actions class="py-5!">
+  <button matFab extended disabled="false" color="primary" type="submit" form="frmVehiculo" [disabled]=miForm.invalid [hidden]="info"><mat-icon>save</mat-icon>Guardar</button>
+  <button matFab extended color="warn" [mat-dialog-close]="false"><mat-icon>cancel</mat-icon>Cancelar</button>
+</mat-dialog-actions>

@@ -70,6 +70,13 @@ CREATE TABLE Administradores (
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100)
 );
+-- 6b. Tabla de Oficinistas
+CREATE TABLE Oficinistas (
+    id_oficinista INT AUTO_INCREMENT PRIMARY KEY,
+    cedula VARCHAR(20) UNIQUE NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100)
+);
 -- 7. Tabla de Usuarios para autenticación
 CREATE TABLE Usuarios(
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
@@ -163,7 +170,7 @@ INSERT INTO Diagnosticos (id_orden, descripcion, observaciones, presupuesto_esti
 
 -- 10 administradores de prueba
 INSERT INTO Administradores (cedula, nombre, email) VALUES
-("118220851", "Johan Davila", "8888-7700", "johan.davila@email.com"),
+("118220851", "Johan Davila", "johan.davila@email.com"),
 ('101-1234-5678', 'Andrea Montero', 'andrea.montero@taller.com'),
 ('102-1234-5678', 'Luis Brenes', 'luis.brenes@taller.com'),
 ('103-1234-5678', 'Patricia Solano', 'patricia.solano@taller.com'),
@@ -175,15 +182,16 @@ INSERT INTO Administradores (cedula, nombre, email) VALUES
 ('109-1234-5678', 'Tatiana Fonseca', 'tatiana.fonseca@taller.com'),
 ('110-1234-5678', 'Roberto Cerdas', 'roberto.cerdas@taller.com');
 
--- 10 usuarios de prueba para autenticación
+-- Recepcionistas de prueba (la tabla Oficinistas no tenía datos)
+INSERT INTO Oficinistas (cedula, nombre, email) VALUES
+('301-1234-5678', 'Sara Jiménez', 'sara.jimenez@taller.com'),
+('302-1234-5678', 'Marco Ureña', 'marco.urena@taller.com');
+
+-- Usuarios de prueba para autenticación (contraseña = bcrypt de la clave indicada en el comentario)
+-- Las cédulas coinciden con un registro real en la tabla del rol correspondiente,
+-- de lo contrario Autenticar::autenticar() no encuentra el perfil y el login falla.
 INSERT INTO Usuarios (cedula, passw, rol) VALUES
-('118220851', '118220851', 1),
-('202-1234-5678', 'admin123', 1),
-('203-1234-5678', 'mec123', 2),
-('204-1234-5678', 'mec123', 2),
-('205-1234-5678', 'mec123', 2),
-('206-1234-5678', 'cli123', 3),
-('207-1234-5678', 'cli123', 3),
-('208-1234-5678', 'cli123', 3),
-('209-1234-5678', 'cli123', 3),
-('210-1234-5678', 'cli123', 3);
+('118220851', '$2y$10$VEqP4.Hk.2A/m0ShxXLpYu7b7QIRwddS839siipDa3M6LcagOZSGO', 1),      -- Admin      | cedula: 118220851     | passw: admin123
+('301-1234-5678', '$2y$10$C9a1FUzFdb.jB5QCvXvFoutUlcoamR1dPCEa2u4SwYFyRBu7fCbj2', 2), -- Oficinista | cedula: 301-1234-5678 | passw: ofi123
+('1-1234-5678', '$2y$10$v/mDI0fF4R4g.hBJSONgqu.ab3Aj/sWj6h7KDecxUTyfBqdrcHvBG', 3),   -- Mecanico   | cedula: 1-1234-5678   | passw: mec123
+('2-1234-5678', '$2y$10$jGvpsxEiG8MX3KN9ERZB9uCutfQsGiIQwGBfu.nyF0ppWNa5LxOhi', 4);   -- Cliente    | cedula: 2-1234-5678   | passw: cli123

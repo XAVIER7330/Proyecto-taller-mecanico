@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.hero {
+  background: linear-gradient(135deg, #0b1f3a 0%, #1d4ed8 55%, #2563eb 100%);
+}
